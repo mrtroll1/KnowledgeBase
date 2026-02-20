@@ -43,7 +43,7 @@ fi
 echo ""
 
 # 3. Add global CLAUDE.md instruction
-INSIGHT_INSTRUCTION="You help the user to organize their knowledge base. When you discover something genuinely valuable about user's knowledge or understanding of some topic use the save_insight tool to record it in the knowledge base. Don't save trivial things; focus on insights that would be a valuable contribution to user's portrait"
+INSIGHT_INSTRUCTION="You help the user to organize their knowledge base. When you discover something genuinely valuable about user's knowledge or understanding of some topic use the save_insight tool to record it in the knowledge base. Don't save trivial things; focus on insights that would be a valuable contribution to user's portrait. Either strengths or weaknesses are valid."
 
 echo "Updating global CLAUDE.md..."
 mkdir -p "$HOME/.claude"
@@ -65,7 +65,7 @@ echo "=== Setup Complete ==="
 echo ""
 echo "The save_insight tool is now available in all your Claude Code sessions."
 echo "Start a new Claude Code session and Claude will automatically save"
-echo "noteworthy insights to: $SCRIPT_DIR/AgenticInsights/"
+echo "noteworthy insights to: $SCRIPT_DIR/agentic-insights/"
 echo ""
 echo "To test it, open Claude Code in any project and say:"
 echo "  \"Save an insight about how MCP servers work\""

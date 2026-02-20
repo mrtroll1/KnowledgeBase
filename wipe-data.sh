@@ -7,7 +7,7 @@ echo "=== KnowledgeBase Data Wipe ==="
 echo ""
 echo "This will delete all content except:"
 echo "  - mcp-server/"
-echo "  - AgenticInsights/ (emptied)"
+echo "  - agentic-insights/ (emptied)"
 echo "  - setup.sh"
 echo "  - wipe-data.sh"
 echo "  - CLAUDE.md"
@@ -25,7 +25,7 @@ cd "$SCRIPT_DIR"
 # Remove everything except the keep list
 for item in *; do
   case "$item" in
-    mcp-server|AgenticInsights|setup.sh|wipe-data.sh|CLAUDE.md|README.md)
+    mcp-server|agentic-insights|setup.sh|wipe-data.sh|CLAUDE.md|README.md)
       ;;
     *)
       echo "Removing $item"
@@ -46,12 +46,12 @@ for item in .*; do
   esac
 done
 
-# Clear AgenticInsights contents but keep the directory
-if [ -d "AgenticInsights" ]; then
-  echo "Clearing AgenticInsights/"
-  rm -rf AgenticInsights/*
+# Clear agentic-insights contents but keep the directory
+if [ -d "agentic-insights" ]; then
+  echo "Clearing agentic-insights/"
+  rm -rf agentic-insights/*
 fi
-mkdir -p AgenticInsights
+mkdir -p agentic-insights
 
 echo ""
 echo "Done. Your knowledge base is clean and ready for fresh content."

@@ -3,30 +3,33 @@ You are managing a personal knowledge base repository. An insight has been captu
 ## Insight Details
 
 **Topic:** {{topic}}
-**Content:**
-{{content}}
+**Strengths:**
+{{strengths}}
+**Weaknesses:**
+{{weaknesses}}
 **Source project:** {{source_project}}
 **Tags:** {{tags}}
-**Date:** {{date}}
 
 ## Your Task
 
 1. Look at the current repo structure to understand how it's organized.
-2. Place this insight in the `AgenticInsights/` directory, following this convention:
-   - Create `AgenticInsights/<topic>.md` file if it doesn't exist (use lowercase kebab-case for the topic file name)
-3. Format the file like this:
+2. Place this insight in the `agentic-insights/` directory, following this convention:
+   - Create `agentic-insights/<topic>/` folder if it doesn't exist (use lowercase kebab-case for the topic folder name)
+   - Inside the topic folder, use two files: `strengths.md` and `weaknesses.md`
+3. If strengths content is provided (not "N/A"), write or append to `agentic-insights/<topic>/strengths.md`
+4. If weaknesses content is provided (not "N/A"), write or append to `agentic-insights/<topic>/weaknesses.md`
+5. Format each file like this:
 
 ```markdown
-# <Descriptive Title>
+# <Topic> — Strengths (or Weaknesses)
 
 **Source:** <source project or "general">
 **Tags:** <comma-separated tags>
-**Date:** <YYYY-MM-DD>
 
-<The insight content, cleaned up and well-formatted>
+<The content, cleaned up and well-formatted>
 ```
 
-4. If the insight relates to or extends an existing file in the AgenticInsights directory, consider appending to that file instead of creating a new one.
-5. After writing the file, commit it with a message like: "Add insight: <short description>"
+6. If the file already exists, merge the new content into it — update, extend, or reorganize as needed rather than just appending blindly.
+7. After writing the file(s), commit with a message like: "Add insight: <short description>"
 
 Keep the content faithful to the original — don't embellish or over-edit. Just clean up formatting if needed.

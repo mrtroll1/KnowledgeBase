@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { execFile } from "node:child_process";
+import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,19 +16,27 @@ const server = new McpServer({
 
 server.tool(
   "save_insight",
-  "You help the user to organize their knowledge base. " + 
+  "You help the user to organize their knowledge base. " +
     "Save an insight from the current coding session to user's personal knowledge base. " +
-    "Use this when you discover something genuinely valuable about user's knowledge or understanding of some topic.",
+    "Use this when you discover something genuinely valuable about user's knowledge or understanding of some topic. " +
+    "Insights are split into strengths and weaknesses — you can provide either or both.",
   {
     topic: z
       .string()
       .describe(
         "The broad topic/category for this insight (e.g. 'typescript', 'debugging', 'architecture', 'git')"
       ),
-    content: z
+    strengths: z
       .string()
+      .optional()
       .describe(
-        "The insight content. Be specific and include code examples if relevant."
+        "What the user does well in this topic. Be specific and include examples if relevant."
+      ),
+    weaknesses: z
+      .string()
+      .optional()
+      .describe(
+        "What the user could improve in this topic. Be specific and include examples if relevant."
       ),
     source_project: z
       .string()
@@ -39,10 +47,20 @@ server.tool(
       .optional()
       .describe("Optional tags for categorization"),
   },
-  async ({ topic, content, source_project, tags }) => {
-    try {
-      const today = new Date().toISOString().split("T")[0];
+  async ({ topic, strengths, weaknesses, source_project, tags }) => {
+    if (!strengths && !weaknesses) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "At least one of 'strengths' or 'weaknesses' must be provided.",
+          },
+        ],
+        isError: true,
+      };
+    }
 
+    try {
       const promptTemplate = await readFile(
         resolve(__dirname, "prompt.txt"),
         "utf-8"
@@ -50,10 +68,10 @@ server.tool(
 
       const prompt = promptTemplate
         .replaceAll("{{topic}}", topic)
-        .replaceAll("{{content}}", content)
+        .replaceAll("{{strengths}}", strengths || "N/A")
+        .replaceAll("{{weaknesses}}", weaknesses || "N/A")
         .replaceAll("{{source_project}}", source_project || "general")
-        .replaceAll("{{tags}}", tags?.join(", ") || "none")
-        .replaceAll("{{date}}", today);
+        .replaceAll("{{tags}}", tags?.join(", ") || "none");
 
       const result = await runClaude(prompt);
 
@@ -61,7 +79,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Insight saved to knowledge base.\n\nTopic: ${topic}\nDate: ${today}\n\n${result}`,
+            text: `Insight saved to knowledge base.\n\nTopic: ${topic}\n\n${result}`,
           },
         ],
       };
@@ -81,22 +99,32 @@ server.tool(
 
 function runClaude(prompt) {
   return new Promise((resolve, reject) => {
-    const child = execFile(
-      "claude",
-      ["-p", "--output-format", "text", prompt],
-      {
-        cwd: REPO_ROOT,
-        timeout: 120_000,
-        maxBuffer: 1024 * 1024,
-      },
-      (error, stdout, stderr) => {
-        if (error) {
-          reject(new Error(`claude exited with error: ${error.message}\n${stderr}`));
-        } else {
-          resolve(stdout.trim());
-        }
+    const child = spawn("claude", ["-p", "--output-format", "text"], {
+      cwd: REPO_ROOT,
+      timeout: 120_000,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+
+    child.stdout.on("data", (data) => { stdout += data; });
+    child.stderr.on("data", (data) => { stderr += data; });
+
+    child.on("error", (error) => {
+      reject(new Error(`Failed to start claude: ${error.message}`));
+    });
+
+    child.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error(`claude exited with code ${code}\n${stderr}`));
+      } else {
+        resolve(stdout.trim());
       }
-    );
+    });
+
+    child.stdin.write(prompt);
+    child.stdin.end();
   });
 }
 
