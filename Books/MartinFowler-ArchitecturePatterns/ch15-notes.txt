@@ -1,0 +1,5 @@
+Distribution Patterns.
+	Remote Facade: Provides a coarse-grained facade on fine-grained objects to improve efficiency over a network. Remote Facade contains no 	domain logic. All the Remote Facade does is translate coarse-grained methods onto the underlying fine-grained objects.
+
+	Data Transfer Object: An object that carries data between processes in order to reduce the number of method calls. If a remote object 		requests data about an order object, the returned Data Transfer Object will contain data from the order, the customer, the line items, the 	products on the line items, the delivery informa- tion—all sorts of stuff. One-for-all vs. One-per-request. Mutable vs. Immutable. Text vs. 	Binary. Binary is mre compact but more fragile to changes. I don’t want the Data Transfer Object to be dependent on the domain object. Nor do 	I want 	the domain objects to be dependent of the Data Transfer Object since the Data Transfer Object structure will change when I alter 	interface formats.
+	

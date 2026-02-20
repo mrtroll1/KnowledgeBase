@@ -1,0 +1,4 @@
+Web Presentation
+	Model View Controller 'A request comes in to an input controller, which pulls information off the request. It then forwards the business logic to an appropriate model object. The model object talks to the data source and does everything indicated by the request as well as gather information for the response. When it’s done it returns control to the input controller, which looks at the results and decides which view (template) is needed to display the response. It then passes control, together with the response data, to the view. The input controller’s handoff to the view often isn’t always a straight call but often involves forwarding with the data placed in an agreed place on some form of HTTP session object that’s shared between the input controller and the view.'
+
+	Views are not necessarilly templates. Three patterns: Transform View, Template View, Two Step View (global html creator)

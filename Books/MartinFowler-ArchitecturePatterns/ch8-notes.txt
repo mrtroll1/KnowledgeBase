@@ -1,0 +1,19 @@
+Putting it all together
+	Three things that will make changing your mind easier: CI, TDD, refactoring
+
+	1. Choose domain layer approach, probably Domain Model, for which:
+		Pros: OOP!
+		Cons: hard to do well, not obvious how to map to a relational db
+
+	2. Data Source layer (based on the domain decision). For DM:
+		Pretty simple & close to db  -> Active Record
+		Want to decouple? -> use Gateways (Probably Row)
+		Complicated -> Data Mapper + Unit of Work
+
+	3. Pesentation layer:
+		Page Controller + Template View (???)
+
+	Other layering schemes. 
+	Brown Layers: Data source, Data mapping, Domain, Controller, Presentation
+	Marinescu layers: Data source, Domain, Services(Use-Cases), Application, Presentation	
+	

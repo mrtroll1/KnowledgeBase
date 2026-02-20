@@ -1,0 +1,16 @@
+Section 5 - The Weather Statioc Case Study
+
+COMPOSITE - CompositeShape looks like a Shape but in fact hadnles a set of Shape instances. CompositeShape.draw() does for (shape in this.shapes): shape.draw
+
+OBSERVER - In this example, Clock is being observed by DigitalClock. DigitalClock registers with the Subject interface of Clock. Clock calls the notify method of Subject whenever the time changes for any reason. The notify method of Subject invokes the update method of each registered Observer. Thus, DigitalClock will receive an update message whenever the time changes. It uses that opportunity to ask Clock for the time and then display it.
+If the observed object is complex, and the observer needs a hint, then the push model is appropriate.
+
+ABSTRACT SERVER - Instead of Switch depending on Light, we have Switch working with Switchable interface that Light implements
+
+ADAPTER - Yet another chain in the link. Light Adapter derives from Switchable and delegates to light. For the cases when Light can not implement Switchable directly.
+
+BRIDGE - wtf...
+
+PROXY - The client sends the getPrice message to what it thinks is a Product, but what is really a ProductDBProxy. The ProductDBProxy fetches the ProductImplementation from the database. It then delegates the getPrice method to it. Neither the client nor the ProductImplementation knows that this has happened.
+
+STAIRWAY TO HEAVEN - Persistent Object - parent for all entities that need to be saved. 

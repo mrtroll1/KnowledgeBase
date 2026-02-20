@@ -1,0 +1,7 @@
+Session State Patterns. 
+	Client Session State: Even the most server-oriented designs need at least a little Client Session State, if only to hold a session identifier. With some 	applications you can consider put- ting all of the session data on the client, in which case the client sends the full set of session data with each request 	and the server sends back the full session state with each response. This allows the server to be completely stateless. With an HTML interface, there are 	three common ways to do client session state: URL parameters, hidden fields, and cookies.
+
+
+	Server Session State: The great appeal of Server Session State is its simplicity. In a number of cases you don’t have to do any programming at all to make 	this work. Whether you can get away with that depends on if you can get away with the in-memory implementation and, if not, how much help your application 	server platform gives you.
+
+	Database Session State: A second alternative (to is_pending or session_id fields) is a separate set of pending tables. So if you have orders and order lines 	tables already in your database, you would add tables for pend- ing orders and pending order lines. Pending session data you save to the pend- ing table; when 	it becomes record data you save it to the real tables. If you have no session state and are able to save all your data as record data in each request, this 	pattern is an obvious choice because you lose nothing in either effort or performance

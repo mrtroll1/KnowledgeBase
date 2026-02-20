@@ -1,0 +1,14 @@
+Mapping to Relation Databases
+	'It’s wise to separate SQL access from the domain logic and place it in separate 		classes. A good way of organizing these classes is to base them on the table structure 		of the database so that you have one class per data- base table.' - clear seperation of SQL and domain logic
+	Although a common pattern is Active Record - adding domain logic to the Row Data Gateway
+	A decoupling architecture is with the Data Mapper. Sometimes also like
+	Domain Service -> Repository -> Data Mapper -> Teble/Row Gateway
+	Business logic -> Collection-like interface -> Building SQL -> Executing SQL
+
+	The Behavioral Problem - 'As you read objects and modify them, you have to ensure that the database state you’re working with stays consistent.' Pattern to solve such problems and also concurrency issues is The Unit of Work.
+
+	Inheritance - Single Table Inheritance, Concrete Table Inheritance, Class Table Inheritance 
+
+	Django uses Metadata and QuerySets are a lsight extension of Query Objects, because the former also carry the results
+
+	Connections and connections pools (open-close <-> get-release)  

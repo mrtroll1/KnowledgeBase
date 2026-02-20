@@ -1,0 +1,15 @@
+Web Ppresentation Patterns
+	MVC: Splits user interface interaction into three distinct roles (Model, View, Controller). The controller takes user input, manipu- lates 	the model, and 	causes the view to update appropriately. In this way UI is a combination of the view and the controller. Two principal 		separations: separating the presen- 	tation from the model and separating the controller from the view.
+	
+	Page Controller: An object that handles a request for a specific page or action on a Web site. Page Controller has one input controller for 	each logical page of the Web site. That controller may be the page itself, as it often is in server page environments, or it may be a s		eparate object that corresponds to that page.
+
+	Front Controller: A controller that handles all requests for a Web site.
+	
+	Template View: Renders information into HTML by embedding markers in an HTML page. The best way to work is to compose the dynamic Web page 	as you do a static page but put in markers that can be resolved into calls to gather dynamic infor- mation. Since the static part of the 	page acts as a template for the particular response, I call this a Template View. Where Template View is taking on responsibilities beyond 	the view, it’s impor- tant to ensure that these responsibilities are handled by the helper, not by the page. Controller and model 		responsibilities involve program logic, which pro- gram logic everywhere, should sit in the helper.
+
+	Transform View: A view that processes domain data element by element and transforms it into HTML. Data -> XML -> HTML
+
+	Two Step View: Turns domain data into HTML in two steps: first by forming some kind of logical page, then rendering the logical page into 	HTML. There are several ways to build a Two Step View. Perhaps the easiest is with two-step XSLT. Single-step XSLT follows the approach in 	Transform View (361), in which each page has a single XSLT style sheet that transforms the domain-oriented XML into HTML. In the two-step 	approach there are two XSLT style sheets. The first-stage style sheet transforms the domain-oriented XML into presentation-oriented XML, 	the second-stage style sheet renders that XML into HTML.
+	Another way is to use classes. Here you define the presentation-oriented structure as a set of classes: with a table class, a row class, 	and so forth. The first stage takes domain information and instantiates these classes into a struc- ture that models a logical screen. The 	second stage renders the classes into HTML, either by getting each presentation-oriented class to generate HTML for itself or by having a 	separate HTML renderer class to do the job.
+
+	Application Controller: A centralized point for handling screen navigation and the flow of an application.

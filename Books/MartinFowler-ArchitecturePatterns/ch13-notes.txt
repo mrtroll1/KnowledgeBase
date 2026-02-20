@@ -1,0 +1,9 @@
+Object-Relational Metadata Mapping Patterns
+	Metadata Mapping: Holds details of object-relational mapping in metadata. Adding a new class then means only adding metadata, not more mapping code.
+		Code Generation: program taht compiles mapping classes from the db schema. Like Symfony command-line model creation but at build time and for 			models (not repos or active records)
+		Reflective Program: some weird DI.
+
+	Query Object: An object that represents a db query
+	SQL can be an involved language, and many developers aren’t particularly familiar with it. Furthermore, you need to know what the database schema looks 	like to form queries. You can avoid this by creating specialized finder methods that hide the SQL inside parameterized methods, but that makes it dif- 		ficult to form more ad hoc queries. It also leads to duplication in the SQL state- ments should the database schema change.
+
+	Repository: Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects. 

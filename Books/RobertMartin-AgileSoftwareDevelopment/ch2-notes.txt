@@ -1,0 +1,41 @@
+Section 2 - Agile Design
+
+1. Rigidity - The system is hard to change because every change forces many other changes to other parts of the system.
+2. Fragility — Changes cause the system to break in places that have no conceptual relationship to the part that was changed.
+3. Immobility - It is hard to disentangle the system into components that can be reused in other systems.
+4. Viscosity — Doing things right is harder than doing things wrong.
+5. Needless Complexity - The design contains infrastructure that adds no direct benefit.
+6. Needless Repetition - The design contains repeating structures that could be unified under a single abstraction.
+7. Opacity - It is hard to read and understand. It does not express its intent well.
+
+1. SRP—The Single Responsibility Principle
+2. OCP—The Open–Closed Principle.
+3. LSP—The Liskov Substitution Principle.
+4. DIP—The Dependency Inversion Principle.
+5. ISP—The Interface Segregation Principle.
+
+1. SRP
+Rectangle AND Geometric Rectangle
+responsibility -- “a reason for change.” An axis of change is an axis of change only if the changes actually occur.
+
+2. OCP
+Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.
+changed by adding new code rather than by changing existing code
+Fool Me Once
+
+3. LSP
+SUBTYPES MUST BE SUBSTITUTABLE FOR THEIR BASE TYPES.
+when using an object through its base-class interface, the user knows only the preconditions and postconditions of the base class
+
+4. DIP
+a. High-level modules should not depend on low-level modules. Both should depend on abstractions. 
+b. Abstractions should not depend on details. Details should depend on abstractions.
+separate object to manipulate/controller the interactions of some two
+
+5. ISP 
+Notice that this is precisely the situation that the ISP tells us to avoid. Each transaction is using methods of the UI that no other class uses. 
+Abstract classes / interfaces that delegate calls to a common 'do-er'.
+
+
+
+

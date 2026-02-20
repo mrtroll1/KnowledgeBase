@@ -1,0 +1,43 @@
+Object- Relational Structural Patterns
+	
+	Identity Field: Saves a database ID field in an object to maintain identity between an in-memory object and a database row.
+	1. Choosing your key. Meaningful vs Meaningless. Simple vs. Compound. Table-unique vs Database-unique.
+
+	Foreign Key Mapping: Maps an association between objects to a foreign key reference between tables. Strategies for saving changes to a 		collection (e.g., an Album’s list of Tracks) from memory back into a relational database. We work on album A.
+	1. Delete & Insert. Delete all tracks that belong to album A in the DB and insert all tracks that belong to album A in memory. 
+		Pros: Very simple to implement (no diff logic). Guarantees DB ends up exactly matching memory.
+		Cons: Only safe if tracks are dependent (they have no independent identity outside the album, nobody else references them). If other 			tables point to those track rows you’d break foreign keys or lose shared data. Loses stable primary keys (unless you preserve 			them somehow). Potentially wasteful (extra deletes/inserts even when nothing changed). Can mess up audit trails or “last 			modified” timestamps.
+	2. Back pointer (track.album). 
+		Pros: Avoids rereading or brute force deletion. Straightforward if you already maintain bidirectional relationships.
+		Cons: Tighter coupling: Track now depends on Album. You still need to track removals (e.g., detecting a track was removed from the 			album and hence its album pointer cleared).
+	3. Diff the collection. Determine exactly which tracks were added, removed, or unchanged and persist only the true differences.
+	a. Diff against current DB state
+		Pros: Doesn’t require remembering original state in memory; robust even if something else changed the DB behind your back. 
+		Cons: Extra SELECT to reload current state; still need comparison logic.
+	b. Diff against original (loaded) snapshot
+		Pros: Efficient (no reread).
+		Cons: Incorrect if another process changed the collection in the DB since you loaded it (stale data issue). You need a concurrency 			control strategy (optimistic locking / version column) to avoid clobbering someone else’s changes.
+	One thing to watch out for is cycles in your links. Say you need to load an order, which has a link to a customer (which you load). The 	customer has a set of payments (which you load), and each payment has orders that it’s paying for, which might include the original order 	you’re trying to load. Therefore, you load the order (now go back to the beginning of this paragraph.)
+
+	Association Table Mapping (for many to 	many case): Saves an association as a table with foreign keys to the tables that are linked by the 	association. This table has only the foreign key IDs for the two tables that are linked together, it has one row for each pair of associated 	objects. The link table has no corresponding in-memory object. As a result it has no ID. Its primary key is the compound of the two primary 	keys of the tables that are associated. No other table should refer to the link table, so you can freely create and destroy links as you need 	them.
+
+	Dependent Mapping: Has one class perform the database mapping for a child class. The basic idea behind Dependent Mapping is that one class 	(the dependent) relies upon some other class (the owner) for its database persistence. Each dependent can have only one owner and must have 	one owner. Ex. Album (owner) & Track (dependent). Dependent has no identity field! Updates = delete + insert.
+
+	Embedded Value: Maps an object into several fields of another object’s table. Ex. instead of doing transaction.money and storing Money objects 	in a separate table, we unpack money into transaction.amount and transaction.currency. Another good example: Date Range (start_date & 		end_date). 
+
+	Serilized LOB (large object): Saves a graph of objects by serializing them into a single large object, which it stores in a database field. 	Customers and Departments - instead of two tables, we store the departments of each customer in a LOB field.
+
+	Single Table Inheritance: Represents an inheritance hierarchy of classes as a single table that has columns for all the fields of the various 	classes. 
+
+	
+
+
+
+
+
+
+
+
+
+
+

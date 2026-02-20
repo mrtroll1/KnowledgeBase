@@ -1,0 +1,34 @@
+Section 4 - Packaging the Payroll System
+
+The Reuse–Release Equivalence Principle
+Older versions should be available. Anything that we reuse must also be released and tracked.
+Either all of the classes in a package are reusable or none of them are.
+
+The Common-Reuse Principle
+The classes in a package are reused together. If you reuse one of the classes in a package, you reuse them all.
+
+The Common-Closure Principle
+The classes in a package should be closed together against the same kinds of changes. A change that affects a package affects all the classes in that package and no other packages.
+
+The Acyclic-Dependencies Principle
+Allow no cycles in the package-dependency graph.
+Dependency Inversion or New Package with common deps
+
+The Stable-Dependencies Principle
+Depend in the direction of stabililty.
+I = C_e / (C_a + C_e)
+
+The Stable-Abstractions Principle
+A package should be as abstract as it is stable.
+A = N_a / N_c
+
+D = |A + I - 1|
+'Statistical analysis of a design is also possible.'
+
+Factory pattern
+Each new ClassInstance() violates the DIP. Use factory instead.
+One of the great benefits of using factories is the ability to substitute one implementation of a factory for another. In this way, you can substitute families of objects within an application.
+
+Payroll Case Study: principles applied
+The most striking case of generality and independence is the PayrollDomain package. This package contains the essence of the whole system, yet it depends on nothing!
+Details should depend on the major architectural deci- sions of the system and should not be depended on.

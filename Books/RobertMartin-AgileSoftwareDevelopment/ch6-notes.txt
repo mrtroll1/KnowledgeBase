@@ -1,0 +1,13 @@
+Section 6 - The ETS Case Study
+
+VISITOR - The VISITOR family allows new methods to be added to existing hierarchies without modifying the hierarchies. (VISITOR, ACYCLIC VISITOR, DECORTOR, EXTENSION OBJECT) 
+
+VISITOR - modem.accept(visitor) {visitor.visit(this)} visitor.visit(modem) {modem.doSomething}
+
+ACYCLIC VISITOR - make base visitor interface degenerate and have one interface for each derivative
+
+DECORATOR - Inherits from the base and extends functionality
+
+EXTENSION OBJECT - Object has a dict of its extensions that are to be used for different purposes.
+
+STATE - Finite State Machines. Switch cases / Transition table / STATE Object.event() delegates to this.state.event() which is SOmeObjectState.event() {Object.doSomething(); Object.changeState()} The primary function of the derivatives is to select and invoke methods of the context class through that reference

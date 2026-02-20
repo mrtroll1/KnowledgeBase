@@ -1,0 +1,13 @@
+Layers
+	layer is a pattern to improve scalability 
+	layers != tiers 
+	Used to be just 2: presentation and data source. But is useful to decouple them. Hence the third layer - the domain (business). 'An informal test I like is to imagine adding a radically different layer to an application, such as a command-line interface to a Web application. If there’s any functionality you have to duplicate in order to do this, that’s a sign of where domain logic has leaked into the presentation. Similarly, do you have to duplicate logic to replace a relational database with an XML file?'
+
+	Hexagonal architecture - both data source and presentation are treated as some external sources. 'I think there is a good distinc- tion to be made between an interface that you provide as a service to others and your use of someone else’s service.'
+
+	Where to put the layers? Server - more maintainable. Client - more responsive
+
+Organizing Domain Logic
+	Three main patterns: Transaction Script, Domain Model and Table Module
+	Common: Domain has a Service Layer or (use-case) controller-entity structure 
+		

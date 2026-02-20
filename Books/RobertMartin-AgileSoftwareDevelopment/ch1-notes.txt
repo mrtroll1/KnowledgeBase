@@ -1,0 +1,25 @@
+Section 1 - Agile Development
+
+Agile Manifesto: 
+• Individuals and interactions over processes and tools
+• Working software over comprehensive documentation
+• Customer collaboration over contract negotiation
+• Responding to change over following a plan
+
+The less functional the initial delivery, the higher the quality in the final delivery.
+If they make a mess, they clean it up before they finish for the day.
+Think of a jigsaw puzzle.
+Halfway Point
+
+Every software module has three functions. First, there is the function it performs while executing. This function is the reason for the module’s existence. The second function of a module is to afford change. Almost all modules will change in the course of their lives, and it is the responsibility of the developers to make sure that such changes are as simple as possible to make. A module that is hard to change is broken and needs fixing, even though it works. The third function of a module is to communicate to its readers. Developers unfamiliar with the module should be able to read and understand it without undue mental gymnastics. A module that does not communicate is broken and needs to be fixed.
+
+Before investing in principles and patterns, invest in clean code.
+
+A Programming Episode
+
+
+
+
+
+
+

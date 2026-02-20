@@ -1,0 +1,16 @@
+Base Patterns
+	Gateway: An object that encapsulates access to an external system or resource
+	• While Facade simplifies a more complex API, it’s usually done by the writer of the service for general use. A Gateway is 		written by the client for its particular use. In addition, a Facade always implies a different interface to what it’s 		covering, whereas a Gateway may copy the wrapped facade entirely, being used for substitution or testing purposes.
+	• Adapter alters an implementation’s interface to match another interface you need to work with. With Gateway there usually 		isn’t an existing interface, although you might use an adapter to map an implementation to a Gateway interface. In 		this case 	the adapter is part of the Gateway implementation.
+	• Mediator usually separates multiple objects so that they don’t know about each other but do know about the mediator. With a 		Gateway there are usually only two objects involved and the resource that’s being wrapped doesn’t know about the 		Gateway.
+
+	Mapper: An object that sets up a communication between two independent objects. A mapper is an insulating layer between 		subsystems. It controls the details of the communication between them without either subsystem being aware of it.
+
+	Layer SUpertype: A type that acts as the supertype for all types in its layer. All you need is a superclass for all the 		objects in a layer—for example, a Domain Object superclass for all the domain objects in a Domain Model.
+
+	Value Object: A small simple object, like money or a date range, whose equality isn’t based on identity. For example, two date 		objects may be the same if their day, month, and year values are the same.
+
+	Money: Value Object with amount + currency. Different strategies on how to handle operations between monies of different 		currencies. Different allocation strategies. Difeerent amount type strategies.
+
+	Special Case: A subclass that provides special behavior for particular cases. Missing Customer & Unknown Customer --> Customer. 		Instead of returning null, or some odd value, return a Special Case that has the same interface as what the caller 		expects. The basic idea is to create a subclass to handle the Special Case. Thus, if you have a customer object and you 		want to avoid null checks, you make a null cus- tomer object. Take all of the methods for customer and override them in 		the Special Case to provide some harmless behavior. Then, whenever you have a null, put in an instance of null customer 		instead. A common way for a Special Case to override methods is to return another Special Case, so if you ask an 		unknown customer for his last bill, you may well get an unknown bill.
+

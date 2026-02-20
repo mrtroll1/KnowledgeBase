@@ -1,0 +1,4 @@
+Distribution Strategies
+	Object distribution = putting objects in different processes or machines and letting 		your code call them as if they were right next door.
+	First Law of Distributed Object Design: Don’t distribute your objects! Use clustering instead
+	If you have to distribute, cover fine-grained objects with corase-grained interfaces - Remote Facades.

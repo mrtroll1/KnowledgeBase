@@ -1,0 +1,34 @@
+Data Source Architectural Patterns
+
+	Table Data Gateway: 
+		A Table Data Gateway holds all the SQL for accessing a single table or view: selects, inserts, updates, and deletes. Other 		code 	calls its methods for all interaction with the database.
+		Simple, usually stateless interface
+
+		What does it return? a) Record Set b) Data Transfer Object c) Domain Object when using Doman Model
+
+	Row Data Gateway:
+		A Row Data Gateway acts as an object that exactly mimics a single record, such as one database row. In it each column in 		the database becomes one field.
+
+		In this case it often makes sense to have separate finder objects so that each table in a relational database will have 		one finder class and one gateway class for the results
+
+		... vs Active Record - the latter has domain logic
+
+	Active Record:
+		An object that wraps a row in a database table or view, encapsulates the database access, and adds domain logic on that 		data. The essence of an Active Record is a Domain Model (116) in which the classes match very closely the record structure 		of an underlying database
+
+		• Construct an instance of the Active Record from a SQL result set row
+		• Construct a new instance for later insertion into the table
+		• Static finder methods to wrap commonly used SQL queries and return Active Record objects
+		• Update the database and insert into it the data in the Active Record
+		• Get and set the fields
+		• Implement some pieces of business logic
+
+	Data Mapper:
+		The Data Mapper is a layer of software that separates the in-memory objects from the database. Its responsibility is to 		transfer data between the two and also to isolate them from each other. With Data Mapper the in-memory objects needn’t 			know even that there’s a database present; they need no SQL interface code, and certainly no knowledge of the database 			schema. (The database schema is always ignorant of the objects that use it.) Since it’s a form of Mapper (473), Data 			Mapper itself is even unknown to the domain layer.
+
+		
+
+		
+
+
+	

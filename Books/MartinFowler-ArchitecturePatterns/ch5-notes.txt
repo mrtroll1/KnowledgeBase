@@ -1,0 +1,19 @@
+Concurrency
+	Concurrency problems occur when more than one active agent, such as a pro- cess or thread, has access to the same piece of data.
+
+	Lost updates: Process A is modifying X, process B also starts to modify X and writes before A does. Then when A writes, the updates of B will be lost. 	
+	Inconsistent read: Process A reads X and starts using this value, while process B modifies it. 
+
+	You can solve these correctness issues at the expense of liveness: how much concurrent activity can go on. 'If you can tolerate the problems, you can avoid any form of concur- rency control. This is rare, but occasionally you find circumstances that permit it.'
+
+	Two execution contexts: requests and sessions
+	'A process is a, usually heavyweight, execution context that provides a lot of isola- tion for the internal data it works on. A thread is a lighter-weight active agent that’s set up so that multiple threads can operate in a single process.'
+
+	Two forms of concurrency control: optimistic and pessimistic. 
+	Optimistic locking: process A and B are allowed to modify X at the same time. If A finishes fist, then when B won't be able to commit (maybe he will if there are no conflicts)
+	Pessimistic locking: process A start to work with X and no one else is allowed until A is done: deadlock can occur!
+
+	Transactions: ACID properties. Atomicity (all-or-nothing), Consistency (of system's state), Isolation (no visible results until commit), Durability (success -> permanent) Do not make a transaction span multiple requests. Common approach: start and end a transaction at the start and end of a request. As opposed to late transaction. Know exactly what transaction lock!
+
+	Application Server Concurrency: process-per-session, process-per-request, thread-per-request
+

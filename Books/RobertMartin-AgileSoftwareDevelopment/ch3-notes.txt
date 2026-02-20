@@ -1,0 +1,24 @@
+Section 3 - Payroll Case Study
+
+0. Some patterns.
+
+Command: UNDO!
+Active Object Engine: linked list of command, waiting to be executed iteratively.
+
+Template Method vs Strategy: Inheritance vs Delegation
+Simpler, Involves less classes vs DIP, More independence between implementations
+Whereas the TEMPLATE METHOD pattern allows a generic algorithm to manipulate many possible detailed implementations, the STRATEGY pattern by fully conforming to the DIP allows each detailed implementation to be manipulated by many different generic algorithms.
+
+Facade and Mediator
+Repositories - Middleware
+
+Singleton and Monostate
+any thing can be truned into a singleton by adding isTheInstance and a if isTheInstance == null check to constructor
+No matter how many instances of Monostate you create, they all behave as though they were a single object. (all variables are static)
+
+Null object
+
+1. Case Study: Quick design session. Think about use-cases, draw diaframs, anticipate some likely changes from the future.
+
+2. Case Study: implementation
+
