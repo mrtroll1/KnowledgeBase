@@ -1,0 +1,44 @@
+Basic Problem: Risk. Risks affect programmers, managers and customers. Thus they must work on preventing them together. 
+	
+'From a set of basic assumptions, we will derive solutions that dictate how the various activities in software development—planning, testing, development, 	design, and deployment—should occur.'
+
+Hard to spend less, hard to earn more. But we can 1) spend later and earn sooner 2) increase the probability that the project will stay alive. 
+	
+Options calculation.
+
+Four variables to control - cost, time, quality, and scope.
+
+Everybody wants to do a good job, and they work much better if they feel they are doing good work. If you deliberately downgrade quality, your team might go 	faster at first, but soon the demoralization of producing crap will overwhelm any gains you temporarily made from not testing, or not reviewing, or not 	sticking to standards.
+
+The cost of change.
+
+Four values: communication, simplicity, feedback, courage. 
+
+Short-term individual goals often conflict with long-term social goals. Societies have learned to deal with this problem by developing shared sets of values, backed up by myths, rituals, punishments, and rewards. Without these values, humans tend to revert to their own short-term best interest.
+
+Unit testing, pair programming, task estimation
+
+XP's design strategy resembles a hill-climbing algorithm. You get a simple design, then you make it a little more complex, then a little simpler, then a little more complex. The problem with hill- climbing algorithms is reaching local optima, where no small change can improve the situation, but a large change could.
+
+Work with people's instincts, not against them—People like winning. People like learning. People like interacting with other people. People like being part of a team. People like being in control. People like being trusted. People like doing a good job. People like having their software work.
+
+Four basic activities: coding, testing, listening, and designing.
+
+I don't trust anything I write until I have tests for it. The tests give me a chance to think about what I want independent of how it will be implemented. Then the tests tell me if I implemented what I thought I implemented.
+
+If you are going to ask questions, then you'd better be prepared to listen to the answers.
+
+Good design organizes the logic so that a change in one part of the system doesn't always require a change in another part of the system. Good design ensures that every piece of logic in the system has one and only one home. Good design puts the logic near the data it operates on. Good design allows the extension of the system with changes in only one place.
+
+So you code because if you don't code, you haven't done anything. You test because if you don't test, you don't know when you are done coding. You listen because if you don't listen you don't know what to code or what to test. And you design so you can keep coding and testing and listening indefinitely. That's it.
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,66 @@
+Part 2: The Solution. 
+
+Practices: The Planning Game, Small releases, Metaphor, Simple design, Testing, Refactoring, Pair programming, Collective ownership, CI, 40h/w, On-site customer, Coding standards.
+
+The right design:
+1. Runs all the tests.
+2. Has no duplicated logic. Be wary of hidden duplication like parallel class hierarchies. 
+3. States every intention important to the programmers.
+4. Has the fewest possible classes and methods.
+
+The management dilemma: authoritarianism vs anarchy. 
+
+Essential XP management tool - the metric. The medium of the metric is the Big Visible Chart. Rather than send e-mail to everyone, which they learn to ignore, the manager periodically (no less than weekly) updates a prominent chart. This is often all the intervention that is needed. 
+
+Split the responsibility and power between Business and Development.
+
+The person responsible for implementing gets to estimate.
+
+"How much for the coffee?" "The coffee is 25 cents, but refills are free." "Just give me a refill, then."
+
+Exploration: Find out what new things the system could do.
+Commitment: Decide what subset of all possible requirements to pursue next.
+Steer—Guide: development as reality molds the plan.
+
+Learn/test/code/release rhythm
+
+If you know that someone else will soon (in a few hours) be looking at what you are writing at the moment, you will think twice before putting in a complexity you can't immediately justify.
+
+Feed back what we learn into the design.
+
+The system (code and tests together) must communicate everything you want to communicate.
+The system must contain no duplicate code. (1 and 2 together constitute the Once and Only Once rule).
+The system should have the fewest possible classes.
+The system should have the fewest possible methods.
+The purpose of the design of the system is, first, to communicate the intent of the programmers and, second, to provide a place for the logic of the system to live. The constraints above provide a framework within which to satisfy these two requirements.
+
+Design through refactoring, design through pictures.
+
+You write tests that might pay off.
+
+If the interface for a method is at all unclear, you write a test before you write the method.
+If the interface is clear, but you imagine that the implementation will be the least bit complicated, you write a test before you write the method.
+If you think of an unusual circumstance in which the code should work as written, you write a test to communicate the circumstance.
+If you find a problem later, you write a test that isolates the problem.
+If you are about to refactor some code, and you aren't sure how it's supposed to behave,
+and there isn't already a test for the aspect of the behavior in question, you write a test first.
+
+Parallel test, Stress test, Monkey test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

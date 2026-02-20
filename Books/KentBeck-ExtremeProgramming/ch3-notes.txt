@@ -1,0 +1,35 @@
+Part 3: Implementing XP.
+
+1. Pick your worst problem.
+2. Solve it the XP way.
+3. When it's no longer your worst problem, repeat.
+
+XP management is a game of indirection and influence.
+
+Under pressure, everyone will revert to previous patterns of behavior, whether these patterns worked or not.
+
+The ideal XP project goes through a short initial development phase, followed by years of simultaneous production support and refinement, and finally graceful retirement when the project no longer makes sense.
+
+Exploration, Planning, Iterations to First Release, Productionizing, Maintenance, Death
+
+If programmers could always make decisions that carefully balanced short-term and long-term priorities, there would be no need for any other technical people on the project besides programmers.
+
+ROles: programmer, customer, tester, tracker, coach, consultant, big boss
+
+The smooth running of an XP project relies on the smooth expression of emotions.
+
+All methodologies are based on fear. You try to set up habits that prevent your fears from becoming reality. XP is no different in this respect from any other methodology. The difference is in what fears are embedded in XP. To the degree that XP is my baby, XP reflects my fears. I am afraid of:
+	● Doing work that doesn't matter
+	● Having projects canceled because I didn't make enough technical progress
+	● Making business decisions badly
+	● Having business people make technical decisions badly for me
+	● Coming to the end of a career of building systems and realizing that I should have spent more time with my kids
+	● Doing work I'm not proud of
+XP also reflects the things I'm not afraid of:
+	● Coding
+	● Changing my mind
+	● Proceeding without knowing everything about the future
+	● Relying on other people
+	● Changing the analysis and design of a running system
+	● Writing tests
+I had to learn not to fear these things. It didn't come naturally, especially with so many voices crying that these were exactly the things I should be afraid of, the things I should work very hard to avoid.
