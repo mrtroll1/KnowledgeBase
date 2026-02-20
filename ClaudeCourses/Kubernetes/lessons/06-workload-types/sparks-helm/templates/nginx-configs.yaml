@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configs
+  namespace: {{ .Values.namespace }}
+data:
+  frontend.conf: |
+    server {
+        listen 80;
+
+        location / {
+            default_type text/html;
+            return 200 '<html><body>
+              <h1>Sparks</h1>
+              <p>Find your match today.</p>
+              <script>
+                fetch("/api/health").then(r => r.json()).then(console.log);
+              </script>
+            </body></html>';
+        }
+
+        location /healthz {
+            default_type application/json;
+            return 200 '{"status":"ok","service":"frontend"}';
+        }
+    }
+
+  api-gateway.conf: |
+    server {
+        listen 80;
+
+        location /api/profiles {
+            proxy_pass http://profiles-service:80/;
+        }
+
+        location /api/matches {
+            proxy_pass http://matcher-service:80/;
+        }
+
+        location /api/health {
+            default_type application/json;
+            return 200 '{"status":"ok","service":"api-gateway"}';
+        }
+
+        location /healthz {
+            default_type application/json;
+            return 200 '{"status":"ok","service":"api-gateway"}';
+        }
+
+        location / {
+            default_type application/json;
+            return 200 '{"service":"api-gateway","routes":["/api/profiles","/api/matches","/api/health"]}';
+        }
+    }
+
+  profiles-service.conf: |
+    server {
+        listen 80;
+
+        location / {
+            default_type application/json;
+            return 200 '{"service":"profiles","version":"1.0","data":[
+              {"id":1,"name":"Alex","age":28,"bio":"Loves hiking"},
+              {"id":2,"name":"Sam","age":25,"bio":"Coffee enthusiast"},
+              {"id":3,"name":"Jordan","age":31,"bio":"Dog person"}
+            ]}';
+        }
+
+        location /healthz {
+            default_type application/json;
+            return 200 '{"status":"ok","service":"profiles"}';
+        }
+    }
+
+  matcher-service.conf: |
+    server {
+        listen 80;
+
+        location / {
+            default_type application/json;
+            return 200 '{"service":"matcher","version":"1.0","data":[
+              {"user1":1,"user2":2,"score":0.87,"matched_at":"2026-02-18T10:00:00Z"},
+              {"user1":1,"user2":3,"score":0.62,"matched_at":"2026-02-18T11:30:00Z"}
+            ]}';
+        }
+
+        location /healthz {
+            default_type application/json;
+            return 200 '{"status":"ok","service":"matcher"}';
+        }
+    }

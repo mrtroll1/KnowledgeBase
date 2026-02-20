@@ -1,0 +1,28 @@
+# Override ONLY what's different in staging.
+# Everything else inherits from values.yaml.
+
+namespace: sparks-staging
+
+postgres:
+  credentials:
+    user: staging_user
+    password: staging_pass
+    database: sparks_staging_db
+  storage: 512Mi
+
+profilesService:
+  replicas: 1
+
+matcherService:
+  replicas: 1
+
+apiGateway:
+  replicas: 1
+  autoscaling:
+    enabled: false             # no HPA in staging — just 1 fixed replica
+
+frontend:
+  replicas: 1
+
+ingress:
+  host: staging.sparks.local

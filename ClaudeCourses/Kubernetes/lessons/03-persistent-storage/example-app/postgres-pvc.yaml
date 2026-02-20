@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: my-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  # No storageClassName specified → Kubernetes looks for
+  # an existing PV that matches (≥5Gi, ReadWriteOnce).
+  # It finds postgres-pv and binds to it.

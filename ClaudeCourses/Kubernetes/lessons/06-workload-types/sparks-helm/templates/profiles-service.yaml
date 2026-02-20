@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profiles-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.profilesService.replicas }}
+  selector:
+    matchLabels:
+      app: profiles-service
+  template:
+    metadata:
+      labels:
+        app: profiles-service
+    spec:
+      containers:
+      - name: profiles
+        image: {{ .Values.profilesService.image }}
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: db-credentials
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d/
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 5
+          failureThreshold: 2
+        resources:
+          {{- toYaml .Values.profilesService.resources | nindent 10 }}
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-configs
+          items:
+          - key: profiles-service.conf
+            path: default.conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profiles-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: profiles-service
+  ports:
+  - port: 80
+    targetPort: 80

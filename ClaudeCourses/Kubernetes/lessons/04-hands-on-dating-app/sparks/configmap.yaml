@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: sparks
+data:
+  PROFILES_SERVICE_URL: "http://profiles-service:80"
+  MATCHER_SERVICE_URL: "http://matcher-service:80"
+  REDIS_URL: "redis://redis:6379"
+  POSTGRES_URL: "postgresql://sparks_admin:sup3rs3cret@postgres:5432/sparks_db"

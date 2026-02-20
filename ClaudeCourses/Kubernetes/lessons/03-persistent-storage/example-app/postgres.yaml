@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: my-app
+spec:
+  replicas: 1                # databases are typically single-instance
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - secretRef:
+            name: postgres-credentials    # mounts ALL keys as env vars
+        volumeMounts:
+        - name: pg-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pg-data
+        persistentVolumeClaim:
+          claimName: postgres-pvc         # ← connects to the PVC
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: my-app
+spec:
+  selector:
+    app: postgres
+  ports:
+  - port: 5432
+    targetPort: 5432
+  # ClusterIP (default) — only reachable inside the cluster.
+  # Your API pod will connect to: postgres.my-app:5432

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profiles-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.profilesService.replicas }}
+  selector:
+    matchLabels:
+      app: profiles-service
+  template:
+    metadata:
+      labels:
+        app: profiles-service
+    spec:
+      containers:
+      - name: profiles
+        image: {{ .Values.profilesService.image }}
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: db-credentials
+        resources:
+          {{- toYaml .Values.profilesService.resources | nindent 10 }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profiles-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: profiles-service
+  ports:
+  - port: 80
+    targetPort: 80

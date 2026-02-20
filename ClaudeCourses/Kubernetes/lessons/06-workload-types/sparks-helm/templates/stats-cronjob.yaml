@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: match-stats
+  namespace: {{ .Values.namespace }}
+spec:
+  schedule: {{ .Values.matchStats.schedule | quote }}
+  successfulJobsHistoryLimit: 3        
+  failedJobsHistoryLimit: 1            
+  concurrencyPolicy: Forbid           
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 3600    
+      template:
+        metadata:
+          labels:
+            app: match-stats
+        spec:
+          restartPolicy: OnFailure     
+          containers:
+          - name: stats
+            image: {{ .Values.postgres.image }}
+            command:
+            - sh
+            - -c
+            - |
+              echo "=== Sparks Daily Match Stats ==="
+              echo "Date: $(date -u +%Y-%m-%d)"
+              echo ""
+
+              psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<'SQL'
+                SELECT '--- Profile Stats ---';
+                SELECT
+                  COUNT(*) as total_profiles,
+                  ROUND(AVG(age), 1) as avg_age
+                FROM profiles;
+
+                SELECT '--- Match Stats (last 24h) ---';
+                SELECT
+                  COUNT(*) as total_matches,
+                  ROUND(AVG(score)::numeric, 2) as avg_score
+                FROM matches
+                WHERE matched_at > NOW() - INTERVAL '24 hours';
+
+                SELECT '--- Swipe Stats (last 24h) ---';
+                SELECT
+                  direction,
+                  COUNT(*) as count
+                FROM swipes
+                WHERE swiped_at > NOW() - INTERVAL '24 hours'
+                GROUP BY direction;
+
+                SELECT '--- Top Matched Profiles ---';
+                SELECT
+                  p.name,
+                  COUNT(m.id) as match_count
+                FROM profiles p
+                LEFT JOIN matches m ON p.id = m.user1_id OR p.id = m.user2_id
+                GROUP BY p.name
+                ORDER BY match_count DESC
+                LIMIT 5;
+              SQL
+
+              echo ""
+              echo "Stats complete at $(date -u +%H:%M:%S)"
+            envFrom:
+            - secretRef:
+                name: db-credentials
+            resources:
+              {{- toYaml .Values.matchStats.resources | nindent 14 }}

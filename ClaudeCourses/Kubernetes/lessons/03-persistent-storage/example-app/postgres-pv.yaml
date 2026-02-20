@@ -1,0 +1,26 @@
+# ============================================================
+# APPROACH A: Manual PV (admin creates this)
+# ============================================================
+# This tells Kubernetes: "There is a 5Gi disk available
+# at /mnt/data/postgres on the node."
+#
+# On a self-hosted server, YOU are the admin, so you create this.
+# On cloud (AWS/GCP), you'd skip this and use StorageClass instead.
+# ============================================================
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  # hostPath = use a directory on the node's own filesystem.
+  # Fine for single-node self-hosted setups.
+  # NOT suitable for multi-node clusters (disk is local to one node).
+  hostPath:
+    path: /mnt/data/postgres
+    type: DirectoryOrCreate

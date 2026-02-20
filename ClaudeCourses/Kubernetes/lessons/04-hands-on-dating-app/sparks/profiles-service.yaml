@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profiles-service
+  namespace: sparks
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: profiles-service
+  template:
+    metadata:
+      labels: 
+        app: profiles-service
+    spec:
+      containers:                                                                                                                                                 
+      - name: profiles
+        image: nginx:alpine                                                                                                                                       
+        ports:  
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: db-credentials
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "50m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: profiles-service
+  namespace: sparks
+spec: 
+  selector: 
+    app: profiles-service
+  ports:
+  - port: 80
+    targetPort: 80

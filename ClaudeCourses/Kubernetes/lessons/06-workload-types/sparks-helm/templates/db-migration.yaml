@@ -1,0 +1,84 @@
+# --- Job: Database Migration ---
+# In a real project, this would use the app's own image and run
+# the framework's migration command — a one-liner:
+#
+#   Rails:   image: profiles-service:v2  → command: ["rails", "db:migrate"]
+#   Django:  image: profiles-service:v2  → command: ["python", "manage.py", "migrate"]
+#   Prisma:  image: profiles-service:v2  → command: ["npx", "prisma", "migrate", "deploy"]
+#
+# The framework tracks applied migrations internally. No custom scripting needed.
+# The image already contains the migration files — they're part of the app's source code.
+#
+# We're using the postgres image + raw SQL here only because our services
+# are nginx mocks with no real framework. In production, replace the image
+# and command with your framework's one-liner.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate-{{ .Release.Revision }}
+  namespace: {{ .Values.namespace }}
+spec:
+  backoffLimit: {{ .Values.migration.backoffLimit }}
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: db-migrate
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: migrate
+        image: {{ .Values.postgres.image }}     # Would be profiles-service image in a real app
+        command:
+        - sh
+        - -c
+        - |
+          # In a real app, this entire block would just be:
+          #   npx prisma migrate deploy
+          # or:
+          #   rails db:migrate
+
+          until pg_isready -h postgres -p 5432 -U "$POSTGRES_USER"; do
+            sleep 2
+          done
+
+          psql -h postgres -U "$POSTGRES_USER" -d "$POSTGRES_DB" <<'SQL'
+            CREATE TABLE IF NOT EXISTS profiles (
+              id SERIAL PRIMARY KEY,
+              name VARCHAR(100) NOT NULL,
+              age INTEGER NOT NULL,
+              bio TEXT,
+              created_at TIMESTAMP DEFAULT NOW()
+            );
+
+            CREATE TABLE IF NOT EXISTS matches (
+              id SERIAL PRIMARY KEY,
+              user1_id INTEGER REFERENCES profiles(id),
+              user2_id INTEGER REFERENCES profiles(id),
+              score DECIMAL(3,2),
+              matched_at TIMESTAMP DEFAULT NOW()
+            );
+
+            CREATE TABLE IF NOT EXISTS swipes (
+              id SERIAL PRIMARY KEY,
+              swiper_id INTEGER REFERENCES profiles(id),
+              target_id INTEGER REFERENCES profiles(id),
+              direction VARCHAR(10) CHECK (direction IN ('left', 'right')),
+              swiped_at TIMESTAMP DEFAULT NOW()
+            );
+
+            INSERT INTO profiles (name, age, bio)
+            SELECT name, age, bio FROM (VALUES
+              ('Alex', 28, 'Loves hiking and craft beer'),
+              ('Sam', 25, 'Coffee enthusiast and bookworm'),
+              ('Jordan', 31, 'Dog person, trail runner')
+            ) AS seed(name, age, bio)
+            WHERE NOT EXISTS (SELECT 1 FROM profiles LIMIT 1);
+          SQL
+
+          echo "Migration complete."
+        envFrom:
+        - secretRef:
+            name: db-credentials
+        resources:
+          {{- toYaml .Values.migration.resources | nindent 10 }}

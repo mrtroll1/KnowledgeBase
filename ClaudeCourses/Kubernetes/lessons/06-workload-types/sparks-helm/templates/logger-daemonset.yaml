@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-logger
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: node-logger
+  template:
+    metadata:
+      labels:
+        app: node-logger
+    spec:
+      containers:
+      - name: logger
+        image: {{ .Values.logger.image }}
+        command:
+        - sh
+        - -c
+        - |
+          echo "Node logger started on $(hostname)"
+          echo "Tailing container logs from /var/log/containers/"
+
+          while true; do
+            for logfile in /var/log/containers/sparks-*.log; do
+              if [ -f "$logfile" ]; then
+                echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $(basename $logfile):"
+                tail -1 "$logfile" 2>/dev/null || true
+              fi
+            done
+            sleep {{ .Values.logger.intervalSeconds }}
+          done
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true                   
+        - name: containers-log
+          mountPath: /var/log/containers
+          readOnly: true
+        resources:
+          {{- toYaml .Values.logger.resources | nindent 10 }}
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: containers-log
+        hostPath:
+          path: /var/log/containers

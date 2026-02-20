@@ -1,0 +1,123 @@
+# ============================================================
+# Sparks Helm values — v3 (Lesson 6: Workload Types)
+# Evolved from Lesson 5 — postgres is now a StatefulSet,
+# added migration Job, logger DaemonSet, stats CronJob.
+# ============================================================
+
+namespace: sparks
+
+# --- Database (StatefulSet) ---
+postgres:
+  image: postgres:16
+  replicas: 1                    # Single-node for learning; set to 3 for a real cluster
+  storage: 1Gi
+  credentials:
+    user: sparks_admin
+    password: sup3rs3cret
+    database: sparks_db
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+
+# --- Database Migration (Job) ---
+migration:
+  backoffLimit: 5                # Retry up to 5 times (postgres might not be ready yet)
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "100m"
+
+# --- Node Logger (DaemonSet) ---
+logger:
+  image: busybox:latest
+  intervalSeconds: 30            # How often to scan for new log entries
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "25m"
+    limits:
+      memory: "64Mi"
+      cpu: "50m"
+
+# --- Match Stats Reporter (CronJob) ---
+matchStats:
+  schedule: "0 2 * * *"         # 2 AM every day
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "128Mi"
+      cpu: "100m"
+
+# --- Cache ---
+redis:
+  image: redis:7-alpine
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "250m"
+
+# --- Application Services ---
+profilesService:
+  image: nginx:alpine
+  replicas: 2
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+matcherService:
+  image: nginx:alpine
+  replicas: 1
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+apiGateway:
+  image: nginx:alpine
+  replicas: 2                  # used as fallback when autoscaling is off
+  autoscaling:
+    enabled: true
+    minReplicas: 1             # scale down to 1 when idle
+    maxReplicas: 5             # cap at 5 under heavy load
+    targetCPUPercent: 50       # scale up when avg CPU > 50% of requests
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"               # HPA uses THIS as the 100% baseline
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+frontend:
+  image: nginx:alpine
+  replicas: 2
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+# --- Ingress ---
+ingress:
+  host: sparks.local

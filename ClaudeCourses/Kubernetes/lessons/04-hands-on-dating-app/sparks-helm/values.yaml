@@ -1,0 +1,85 @@
+# ============================================================
+# ONE file to configure the ENTIRE app.
+# Compare this to editing 9 separate YAML files in sparks/.
+#
+# Want to deploy to staging? Override just what's different:
+#   helm install sparks ./sparks-helm -f values-staging.yaml
+# ============================================================
+
+namespace: sparks
+
+# --- Database ---
+postgres:
+  image: postgres:16
+  storage: 1Gi
+  credentials:
+    user: sparks_admin
+    password: sup3rs3cret
+    database: sparks_db
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+
+# --- Cache ---
+redis:
+  image: redis:7-alpine
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "250m"
+
+# --- Application Services ---
+profilesService:
+  image: nginx:alpine
+  replicas: 2
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+matcherService:
+  image: nginx:alpine
+  replicas: 1
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+apiGateway:
+  image: nginx:alpine
+  replicas: 2
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+frontend:
+  image: nginx:alpine
+  replicas: 2
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
+    limits:
+      memory: "64Mi"
+      cpu: "100m"
+
+# --- Ingress ---
+ingress:
+  host: sparks.local

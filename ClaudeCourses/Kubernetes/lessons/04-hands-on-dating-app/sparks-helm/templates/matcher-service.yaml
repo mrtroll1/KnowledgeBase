@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matcher-service
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.matcherService.replicas }}
+  selector:
+    matchLabels:
+      app: matcher-service
+  template:
+    metadata:
+      labels:
+        app: matcher-service
+    spec:
+      containers:
+      - name: matcher
+        image: {{ .Values.matcherService.image }}
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: db-credentials
+        resources:
+          {{- toYaml .Values.matcherService.resources | nindent 10 }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matcher-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: matcher-service
+  ports:
+  - port: 80
+    targetPort: 80
