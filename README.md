@@ -6,9 +6,9 @@
 
 ### Setup Your Own
 
-1. Clone this repo (or fork it and clear the content):
+1. Clone or fork this repo:
    ```bash
-   git clone <your-repo-url> ~/MyKnowledgeBase
+   git clone https://github.com/mrtroll1/KnowledgeBase ~/MyKnowledgeBase
    cd ~/MyKnowledgeBase
    ```
 

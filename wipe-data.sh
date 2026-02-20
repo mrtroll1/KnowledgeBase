@@ -7,6 +7,7 @@ echo "=== KnowledgeBase Data Wipe ==="
 echo ""
 echo "This will delete all content except:"
 echo "  - mcp-server/"
+echo "  - claude-courses/"
 echo "  - agentic-insights/ (emptied)"
 echo "  - setup.sh"
 echo "  - wipe-data.sh"
@@ -25,7 +26,7 @@ cd "$SCRIPT_DIR"
 # Remove everything except the keep list
 for item in *; do
   case "$item" in
-    mcp-server|agentic-insights|setup.sh|wipe-data.sh|CLAUDE.md|README.md)
+    mcp-server|agentic-insights|claude-courses|setup.sh|wipe-data.sh|CLAUDE.md|README.md)
       ;;
     *)
       echo "Removing $item"
