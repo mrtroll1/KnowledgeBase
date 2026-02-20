@@ -1,8 +1,8 @@
 ## My humble dev Knowledge Base
 
-hand-picked are some books or checklists that I studied.
-claude-courses is me using claude code is used as an interactive educator.
-agentic-insights are automatically captured from my Claude Code sessions using an MCP server.
+**hand-picked** are some books or checklists that I studied. <br>
+**claude-courses** is me using claude code is used as an interactive educator. <br>
+**agentic-insights** are automatically captured from my Claude Code sessions using an MCP server.
 
 ### Setup Your Own
 
