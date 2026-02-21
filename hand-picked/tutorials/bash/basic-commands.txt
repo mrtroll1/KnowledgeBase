@@ -1,0 +1,77 @@
+<command_name> <arg_1> ... <arg_k> <-flag> <optional_value> <--verbose-flag> <optionaL_value>
+
+ls [PATH]s - list storage
+	ls -l long fomat
+	ls -a - show hidden
+	ls -h - human readable
+	ls -i - index numbers
+	ls -lahi - all together
+
+pwd - present working directory
+
+mkdir [PATH]s - make directory 
+	-p - with parents
+
+touch [PATH]s - make file
+
+nano/vim [PATH] - edit file
+
+cd [PATH] - change directory
+
+pushd [PATH] - change directory and remember original
+popd - go back to original
+
+cp [FROM] [TO] - copy files
+	-r recursive (to copy directories)
+
+mv [WHAT] [TO] - move files or directories
+
+diff [PATH_1] [PATH_2]  - show diff between two files
+	-u - union view
+	-y --side-by-side - side by side view
+
+wc [PATH] - size, word and line counts
+
+file - show type and extension
+
+chmod [X1X2X3] - change permissions
+	X1 	X2	 X2
+	owner   group    anyone
+	0-7     0-7      0-7
+        read: 4, write: 2, execute: 1
+
+echo [STRING] - print string
+echo [$ENV_VAR] - print environemnt variable
+
+find [PATH] - find files in a directory
+	-type (f or d)
+	-print0 - separate by nulls
+
+xargs [SOME_LIST] - format to propoer list
+	-0 - expects null-separate
+
+time [COMMAND] - time a command
+
+watch [COMMAND] - run repeatedly
+	-L - interval in seconds
+
+rm [PATH] - delete file permanently
+	-r - recursive
+	-f force
+
+VARIABLES
+$VAR_NAME = ... - set a variable
+<cmd> $VAR_NAME - use a variable
+
+COMMAND COMBOS
+
+<cmd_1> && <cmd_2> - execute 2 upon success of 1
+<cmd_1> ; <cmd_2> - execute 2 after 1
+<cmd_1> | <cmd_2> - execute 2 with 1's output as arg
+<cmd> >> [PATH] - write commands's result to file
+[PATH] >> <cmd> - file as input to command
+
+
+
+
+
