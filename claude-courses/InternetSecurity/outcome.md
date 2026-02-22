@@ -14,13 +14,17 @@
 - **SQL injection mechanics**: Understands how string concatenation lets attacker-controlled input escape data context and inject SQL logic. Can construct working injections (`' OR '1'='1`). Correctly identifies vulnerable vs safe code (f-string concatenation vs parameterized placeholders).
 - **Blind SQL injection**: Understands the character-by-character extraction technique — using SUBSTR() and a yes/no oracle to leak data one bit at a time. Ran the full exploit in hack.sh. Knows it's automatable (sqlmap).
 - **ORM safety limits**: Correctly identifies that ORMs don't guarantee safety — raw SQL escape hatches and potential ORM bugs mean parameterization awareness is always needed regardless of abstraction layer.
+- **XSS core mechanics**: Understands stored vs reflected XSS, can identify `dangerouslySetInnerHTML` as a vulnerability, and knows the fix is escaping output or using `textContent`. Correctly identified that single-pass denylist filters are bypassable (nested `<script>` tags, non-script tags with event handlers).
+- **Filter bypass techniques**: Can craft multiple bypasses against naive denylist sanitization — both the `<img onerror>` approach and the nested-tag trick (`<scr<script>ipt>`). Understands why allowlist-based sanitization is the correct approach.
+- **CSP fundamentals**: Understands that `script-src 'self'` blocks inline scripts and external-origin scripts. Correctly identified 3 of 4 CSP scenarios.
 
 ## Partial / Needs Refinement
 - **Disassembly reading**: Exposed to `objdump` output and stack frame layout (sub sp, stp, etc.) but hasn't independently parsed a disassembly yet. Understands the concept (frame size, buffer offset, return address offset) but hasn't practiced it hands-on.
 - **SQL comment trick (`--`)**: Missed using `--` to neutralize trailing SQL syntax in Q1. Understands the concept but didn't apply it when crafting the injection — left a dangling `%'` that would cause a syntax error.
+- **CSP and inline event handlers**: Didn't realize that CSP treats event handlers (`onerror`, `onclick`) as inline scripts — they're blocked by `script-src 'self'` just like `<script>` tags. Key insight: CSP sees *all* inline JS the same way.
+- **`href` XSS in React**: Missed that React doesn't sanitize URL schemes in `href` attributes — `javascript:alert('XSS')` renders as a clickable XSS link even though React auto-escapes text content.
 
 ## Gaps — Not Yet Covered
-- Cross-site scripting (XSS)
 - Password hashing and storage
 - Memory safety bugs
 - Patch management and vulnerability lifecycle
@@ -31,7 +35,7 @@
 - [x] 01 — The Morris Worm (1988) — quiz passed, exploit exercise completed
 - [x] 02 — The PHF CGI Attack (1996) — quiz passed
 - [x] 03 — SQL Injection (2000) — quiz passed, blind injection exercise completed
-- [ ] 04 — The Samy Worm / XSS (2005)
+- [x] 04 — The Samy Worm / XSS (2005) — quiz passed
 - [ ] 05 — The RockYou Breach (2009)
 - [ ] 06 — Heartbleed (2014)
 - [ ] 07 — Equifax & WannaCry (2017)

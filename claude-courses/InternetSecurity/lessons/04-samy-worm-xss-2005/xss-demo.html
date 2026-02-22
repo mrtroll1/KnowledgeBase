@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head><title>XSS Demo</title></head>
+<body>
+  <h1>Comment System</h1>
+
+  <h2>Post a comment:</h2>
+  <textarea id="input" rows="3" cols="60"
+    placeholder="Try: <img src=x onerror=&quot;alert('XSS')&quot;>"></textarea>
+  <br>
+  <button onclick="postVulnerable()">Post (Vulnerable)</button>
+  <button onclick="postSafe()">Post (Safe)</button>
+
+  <h2>Comments (Vulnerable - innerHTML):</h2>
+  <div id="vulnerable" style="border: 2px solid red; padding: 10px; min-height: 40px;"></div>
+
+  <h2>Comments (Safe - textContent):</h2>
+  <div id="safe" style="border: 2px solid green; padding: 10px; min-height: 40px;"></div>
+
+  <script>
+    function postVulnerable() {
+      const text = document.getElementById('input').value;
+      const div = document.createElement('div');
+      div.innerHTML = text;  // VULNERABLE: renders HTML
+      document.getElementById('vulnerable').appendChild(div);
+    }
+
+    function postSafe() {
+      const text = document.getElementById('input').value;
+      const div = document.createElement('div');
+      div.textContent = text;  // SAFE: treats input as plain text
+      document.getElementById('safe').appendChild(div);
+    }
+  </script>
+</body>
+</html>
