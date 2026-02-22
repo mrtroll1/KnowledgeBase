@@ -8,16 +8,19 @@ without knowing the password and without reading `victim.c`.
 
 Compile the victim (then close `victim.c` — no peeking):
 
+**Linux (x86_64):**
 ```bash
 gcc -fno-stack-protector -no-pie -o victim victim.c
 ```
 
-> On macOS, `-no-pie` and `-z execstack` may not be supported or needed.
-> The exercise works without them — the key behavior (return address overwrite)
-> still happens. If you get warnings, just use:
-> ```bash
-> gcc -fno-stack-protector -o victim victim.c
-> ```
+**macOS (Apple Silicon):**
+ARM64 macOS forces PIE (ASLR), which defeats our fixed-address exploit.
+Cross-compile as x86_64 to disable it:
+```bash
+gcc -arch x86_64 -fno-stack-protector -Wl,-no_pie -o victim victim.c
+```
+> Note: x86_64 binaries run via Rosetta 2. Segfaults may hang instead of
+> terminating cleanly — the `hack.sh` script handles this with timeouts.
 
 ## Step 1: Observe Normal Behavior
 
