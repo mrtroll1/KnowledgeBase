@@ -11,12 +11,15 @@
 - **Parameterized APIs as the universal fix**: Grasps that command injection, SQL injection, and XSS are the same structural flaw (code and data mixed in one channel) with the same class of fix (separate channels). Articulated this independently.
 - **Denylist vs allowlist**: Correctly argues against stripping semicolons — too many metacharacters, encoding bypasses, and it limits legitimate input. Understands allowlists and parameterization are the robust approach.
 - **execFile() edge cases**: Identified that `execFile` can still be dangerous if the invoked program itself interprets args dangerously (e.g., a program that spawns a shell). Intuition is right, though examples could be sharper.
+- **SQL injection mechanics**: Understands how string concatenation lets attacker-controlled input escape data context and inject SQL logic. Can construct working injections (`' OR '1'='1`). Correctly identifies vulnerable vs safe code (f-string concatenation vs parameterized placeholders).
+- **Blind SQL injection**: Understands the character-by-character extraction technique — using SUBSTR() and a yes/no oracle to leak data one bit at a time. Ran the full exploit in hack.sh. Knows it's automatable (sqlmap).
+- **ORM safety limits**: Correctly identifies that ORMs don't guarantee safety — raw SQL escape hatches and potential ORM bugs mean parameterization awareness is always needed regardless of abstraction layer.
 
 ## Partial / Needs Refinement
 - **Disassembly reading**: Exposed to `objdump` output and stack frame layout (sub sp, stp, etc.) but hasn't independently parsed a disassembly yet. Understands the concept (frame size, buffer offset, return address offset) but hasn't practiced it hands-on.
+- **SQL comment trick (`--`)**: Missed using `--` to neutralize trailing SQL syntax in Q1. Understands the concept but didn't apply it when crafting the injection — left a dangling `%'` that would cause a syntax error.
 
 ## Gaps — Not Yet Covered
-- SQL injection
 - Cross-site scripting (XSS)
 - Password hashing and storage
 - Memory safety bugs
@@ -27,7 +30,7 @@
 ## Lessons Completed
 - [x] 01 — The Morris Worm (1988) — quiz passed, exploit exercise completed
 - [x] 02 — The PHF CGI Attack (1996) — quiz passed
-- [ ] 03 — SQL Injection (2000)
+- [x] 03 — SQL Injection (2000) — quiz passed, blind injection exercise completed
 - [ ] 04 — The Samy Worm / XSS (2005)
 - [ ] 05 — The RockYou Breach (2009)
 - [ ] 06 — Heartbleed (2014)
