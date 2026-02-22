@@ -159,6 +159,105 @@ In case 3, the extra characters spilled past the `password` buffer and into the 
 
 ---
 
+## "But What If the Variables Were in a Different Order?"
+
+A natural question: the overflow only corrupts `authorized` because it happens to sit right next to `password` in memory. What if the compiler put them in a different order? Wouldn't that "fix" the bug?
+
+### Why Variables Are Adjacent
+
+When you call a function, the CPU does one thing: it moves a single pointer (the **stack pointer**) downward to make room for *all* local variables at once:
+
+```asm
+sub rsp, 16    ; reserve 16 bytes — one instruction, done
+```
+
+There's no per-variable allocation. No `malloc`. The compiler adds up all local variables, rounds up for alignment, and emits one subtract. That's why the stack is the fastest memory allocation that exists — and why everything is packed together:
+
+```
+         HIGH MEMORY
+  ┌──────────────────────────┐
+  │   return address          │  ← where to go after function ends
+  ├──────────────────────────┤
+  │   saved frame pointer     │
+  ├──────────────────────────┤
+  │   authorized (4 bytes)    │  ← packed tight
+  ├──────────────────────────┤
+  │   password[0..7] (8 bytes)│  ← right next to it
+  └──────────────────────────┘
+         LOW MEMORY (stack grows DOWN)
+```
+
+You can verify this yourself with `switch-init-order.c` in this directory — it prints the actual addresses of variables declared in both orders.
+
+### Reordering Doesn't Save You
+
+Even if reordering the declarations moved `authorized` away from the buffer, the **return address** is *always* above your local variables on the stack. An overflow that keeps going will eventually hit it — no matter what order the variables are in:
+
+```
+  ┌──────────────────────────┐
+  │   return address ←←←←←←←←│← THIS is what the Morris Worm targeted
+  ├──────────────────────────┤
+  │   (other locals)          │← overflow trashes these too, but who cares
+  ├──────────────────────────┤
+  │   password[0..7]          │← start here, keep writing...
+  │   AAAAAAAAAAAAAAAAAAAAAAAA│   ...everything above gets overwritten
+  └──────────────────────────┘
+```
+
+The variable-corruption demo is just a gentle illustration. The *real* danger of buffer overflows is not corrupting a neighbor — it's hijacking the return address, which has a fixed structural position relative to any local buffer.
+
+### Modern Defenses (What Actually Helps)
+
+Since reordering variables doesn't help, real defenses attack the problem differently:
+
+| Defense | What it does |
+|---|---|
+| **Stack canaries** | Place a secret random value between your locals and the return address. If an overflow overwrites it, the program aborts before returning. |
+| **ASLR** | Randomize where the *entire stack* starts in memory each run. The attacker can't predict where their shellcode will land. |
+| **Non-executable stack (NX/DEP)** | Mark the stack as data-only. Even if the attacker redirects execution there, the CPU refuses to execute it. |
+| **`-fstack-reorder`** | Some compilers *do* reorder variables, placing buffers away from critical data. But this is a mitigation, not a fix — the return address is still reachable. |
+
+### But Do You Even Need the Source Code?
+
+No. Attackers almost never have source code. They find the right overflow offset anyway:
+
+**Disassembly** — The compiled binary *is* the blueprint. One command reveals the stack layout:
+```bash
+objdump -d ./program | grep -A5 "<main>"
+# sub $0x20,%rsp  ← "I reserved 32 bytes" — now you know the offset
+```
+
+**Fuzzing** — Send increasingly long inputs until the program crashes, then binary-search for the exact offset. No source code or binary access needed:
+```
+Send "A" × 100  → OK
+Send "A" × 300  → crash!    ← somewhere between 100–300
+Send "A" × 200  → OK
+Send "A" × 260  → crash!    ← narrowing in...
+```
+
+**NOP sleds** — Even when you can't predict the exact jump target, pad your payload with `NOP` instructions (0x90). The return address just needs to land *anywhere* in the sled:
+```
+┌───────────────────────────────────────┐
+│ 90 90 90 90 90 90 90 90 │ shellcode   │
+└───────────────────────────────────────┘
+  ▲        ▲        ▲
+  land here, or here, or here — all work
+```
+
+This turns a needle-in-a-haystack into a barn door.
+
+**The uncomfortable truth: imprecision is not a defense.** Every "but you'd need to know..." objection has a well-known countermeasure in the attacker's toolbox. That's why we need real defenses, not security through obscurity.
+
+---
+
+## Exercise 2: Black-Box Fuzzing
+
+In the first exercise, you could read the source code and count bytes. Real attackers don't have that luxury. In this exercise, you'll find the overflow offset the hard way — by probing a program you can't read.
+
+See `blind-overflow/` in this directory for the exercise files and instructions.
+
+---
+
 ## The Bigger Picture
 
 ### Why Was C Vulnerable?
