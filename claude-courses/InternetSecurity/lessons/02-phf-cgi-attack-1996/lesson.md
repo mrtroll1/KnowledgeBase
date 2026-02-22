@@ -118,17 +118,17 @@ http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(stdout || stderr);
   });
-}).listen(3000, () => console.log('Server on http://localhost:3000'));
+}).listen(3001, () => console.log('Server on http://localhost:3001'));
 ```
 
 A normal request looks like:
 ```
-http://localhost:3000/?host=google.com
+http://localhost:3001/?host=google.com
 ```
 
 An attack looks like:
 ```
-http://localhost:3000/?host=google.com;cat%20/etc/passwd
+http://localhost:3001/?host=google.com;cat%20/etc/passwd
 ```
 
 The shell receives: `ping -c 1 google.com; cat /etc/passwd`
@@ -160,7 +160,7 @@ http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end(stdout || stderr);
   });
-}).listen(3000, () => console.log('Server on http://localhost:3000'));
+}).listen(3001, () => console.log('Server on http://localhost:3001'));
 ```
 
 The difference is fundamental:
@@ -200,16 +200,16 @@ In another terminal, try these requests:
 
 ```bash
 # Normal use
-curl "http://localhost:3000/?host=localhost"
+curl "http://localhost:3001/?host=localhost"
 
 # Command injection — read a file
-curl "http://localhost:3000/?host=localhost;cat%20/etc/passwd"
+curl "http://localhost:3001/?host=localhost;cat%20/etc/passwd"
 
 # Command injection — list files
-curl "http://localhost:3000/?host=localhost;ls%20-la%20/"
+curl "http://localhost:3001/?host=localhost;ls%20-la%20/"
 
 # Command injection using backticks
-curl "http://localhost:3000/?host=\`whoami\`"
+curl "http://localhost:3001/?host=\`whoami\`"
 ```
 
 Now replace the `exec` call with `execFile` (the safe version) and try the same attacks. You will see them fail — the injected commands are treated as literal arguments to `ping`, not as shell commands.

@@ -5,4 +5,4 @@ Key teaching pattern: for each historical incident, first show the vulnerable co
 Use ASCII diagrams liberally to show data flow, especially the moment where an attacker's input crosses a trust boundary.
 Provide hands-on examples the student can actually run or reason through — curl commands, small scripts, SQL snippets.
 Never glorify attacks — frame them as engineering lessons. Every hack is a lesson in how systems really work vs. how we assumed they work.
-Use outcome.md to track what the student understands about security concepts as they progress.
+Use outcome.md to track what the student understands about security concepts as they progress - modify it after every quic completeion.

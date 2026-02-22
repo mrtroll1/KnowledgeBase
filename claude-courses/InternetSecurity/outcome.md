@@ -7,11 +7,15 @@
 - **Safe vs unsafe C functions**: Can distinguish `gets` (no size limit, removed in C11) from `fgets` (takes size parameter). Correctly identified the vulnerable version in a code comparison.
 - **Modern defenses (conceptual)**: Understands that ASLR+PIE defeats fixed-address exploits (experienced this firsthand when the ARM64 binary was immune), stack canaries detect overwrites, NX prevents stack execution. Knows these are mitigations, not complete fixes.
 
+- **Command injection (shell injection)**: Understands the full pattern — user input + string concatenation + shell execution = injection. Can construct working exploit URLs. Correctly explains why `execFile()`/`subprocess.run([...])` is safe: it bypasses the shell entirely via `execve()`, passing args as `argv[]` so metacharacters are literal. Understands the difference is not escaping — it's eliminating the interpreter.
+- **Parameterized APIs as the universal fix**: Grasps that command injection, SQL injection, and XSS are the same structural flaw (code and data mixed in one channel) with the same class of fix (separate channels). Articulated this independently.
+- **Denylist vs allowlist**: Correctly argues against stripping semicolons — too many metacharacters, encoding bypasses, and it limits legitimate input. Understands allowlists and parameterization are the robust approach.
+- **execFile() edge cases**: Identified that `execFile` can still be dangerous if the invoked program itself interprets args dangerously (e.g., a program that spawns a shell). Intuition is right, though examples could be sharper.
+
 ## Partial / Needs Refinement
 - **Disassembly reading**: Exposed to `objdump` output and stack frame layout (sub sp, stp, etc.) but hasn't independently parsed a disassembly yet. Understands the concept (frame size, buffer offset, return address offset) but hasn't practiced it hands-on.
 
 ## Gaps — Not Yet Covered
-- Command injection
 - SQL injection
 - Cross-site scripting (XSS)
 - Password hashing and storage
@@ -22,7 +26,7 @@
 
 ## Lessons Completed
 - [x] 01 — The Morris Worm (1988) — quiz passed, exploit exercise completed
-- [ ] 02 — The PHF CGI Attack (1996)
+- [x] 02 — The PHF CGI Attack (1996) — quiz passed
 - [ ] 03 — SQL Injection (2000)
 - [ ] 04 — The Samy Worm / XSS (2005)
 - [ ] 05 — The RockYou Breach (2009)
