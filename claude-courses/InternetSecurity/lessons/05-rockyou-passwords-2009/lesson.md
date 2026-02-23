@@ -198,6 +198,105 @@ Brute-forcing a database of 10,000 common passwords per user:
 
 ---
 
+## Inside bcrypt: Why Is It Slow?
+
+bcrypt is not just "SHA256 but slower." It is built on a completely different foundation — the **Blowfish** block cipher (Bruce Schneier, 1993). Blowfish has an unusual property: its **key setup is extremely expensive** compared to the actual encryption. Most ciphers optimize for fast key setup. bcrypt's designers (Provos & Mazieres, 1999) exploited this by making the key setup even more expensive on purpose, creating a variant called **Eksblowfish** ("expensive key schedule").
+
+### What happens when you call `bcrypt.hash(password, 12)`
+
+```
+Step 1: Parse cost factor → 2^12 = 4,096 rounds
+
+Step 2: Generate 128-bit random salt
+
+Step 3: Initialize Blowfish internal state
+        → 18 "P-box" subkeys (each 32 bits)
+        → 4 "S-boxes" (each 256 × 32 bits)
+        → Total: ~4 KB of mutable state
+
+Step 4: THE EXPENSIVE PART — 4,096 iterations:
+        ┌─────────────────────────────────────────┐
+        │  for i = 0 to 4,095:                    │
+        │    re-derive all 4 KB of internal state  │
+        │      using the PASSWORD as key           │
+        │    re-derive all 4 KB of internal state  │
+        │      using the SALT as key               │
+        └─────────────────────────────────────────┘
+        Each round depends on the previous round's output.
+        Cannot be parallelized. Cannot be shortcutted.
+
+Step 5: Encrypt the constant "OrpheanBeholderScryDoubt"
+        64 times using the final state
+
+Step 6: Output: $2b$12$<salt_base64><hash_base64>
+```
+
+The cost factor is exponential: cost=12 means 4,096 rounds, cost=13 means 8,192 rounds. Each +1 doubles the work. This is how bcrypt "ages" — as hardware gets faster, you increase the cost factor.
+
+### Why GPUs do not help
+
+SHA256 is a tight loop of simple arithmetic — perfect for GPUs with thousands of tiny cores. bcrypt's inner loop requires 4 KB of fast-access memory per hash, with random S-box lookups that thrash the cache. GPUs have very limited per-core memory. This was deliberate — bcrypt is **memory-hard**, not just CPU-hard.
+
+```
+SHA256 internals:           bcrypt internals:
+
+  password                    password + salt
+     │                           │
+     ▼                           ▼
+  ┌──────┐                  ┌──────────────────┐
+  │1 pass│                  │ round 1: derive   │◄──┐
+  │64 ops│                  │ 4 KB state from   │   │
+  └──┬───┘                  │ password and salt │   │
+     │                      └────────┬──────────┘   │
+     ▼                               │              │
+   done                              ▼              │
+                             ┌──────────────┐       │
+                             │ round 2:     │       │
+                             │ re-derive    │───────┘
+                             │ from round 1 │
+                             └──────────────┘
+                                   ...
+                             (×4,096 at cost=12)
+                                   │
+                                   ▼
+                                 done
+```
+
+scrypt and Argon2 push this further — scrypt requires megabytes of RAM per hash, and Argon2 lets you tune time and memory independently.
+
+### The 72-byte password limit
+
+Blowfish's key schedule XORs the key material into its 18 P-boxes (18 × 4 bytes = 72 bytes). If your password is longer than 72 bytes, the extra bytes simply have no slot in the cipher — they are silently ignored. This is not a bug in the npm library; it is a physical constraint of the underlying cipher.
+
+Most npm bcrypt libraries do **not** warn you about this. Two passwords that share the same first 72 bytes will produce the same hash. The pragmatic fix is to pre-hash with SHA256 before feeding to bcrypt:
+
+```javascript
+// Normalize any-length password to 32 bytes, then bcrypt that
+const normalized = crypto.createHash('sha256').update(password).digest('hex');
+const hash = await bcrypt.hash(normalized, 12);
+```
+
+This is what Dropbox uses in production. Argon2, the modern alternative, does not have this limitation.
+
+### bcrypt does not make weak passwords safe
+
+The math is important here. bcrypt at cost 12 does ~3 hashes/sec per core. That sounds safe until you do the attacker math:
+
+```
+Spray top-10 passwords across 1M users:
+  1,000,000 × 10 = 10,000,000 hashes
+  10M ÷ 3/sec = ~38 days on 1 core
+  With a rented 32-core server: ~1 day
+
+Target 1,000 high-value users with a 100K wordlist:
+  1,000 × 100,000 = 100,000,000 hashes
+  With 32 cores: ~12 days
+```
+
+bcrypt buys **time**, not invincibility. For users with `123456` as their password, even "expensive" is cheap enough. This is why bcrypt must be combined with weak-password rejection at signup, breach-list checking, and multi-factor authentication.
+
+---
+
 ## A/B Comparison: Code You Might Write
 
 ### A: The Wrong Way (MD5 or SHA256)

@@ -30,7 +30,6 @@
 - **JWT as session optimization**: Understands that tokens exist to avoid re-authenticating on every request. Initially attributed this purely to bcrypt's cost, then refined understanding to include the broader architectural reasons (no DB round-trip, statelessness, horizontal scaling). Knows the pattern: authenticate once (pay bcrypt cost), then carry a signed token.
 
 ## Gaps — Not Yet Covered
-- Memory safety bugs
 - Patch management and vulnerability lifecycle
 - Supply chain / dependency attacks
 - Trust boundaries and input validation (meta-concept)
@@ -41,6 +40,6 @@
 - [x] 03 — SQL Injection (2000) — quiz passed, blind injection exercise completed
 - [x] 04 — The Samy Worm / XSS (2005) — quiz passed
 - [x] 05 — The RockYou Breach (2009) — quiz skipped, concepts demonstrated in discussion
-- [ ] 06 — Heartbleed (2014)
+- [x] 06 — Heartbleed (2014) — lesson read, quiz skipped
 - [ ] 07 — Equifax & WannaCry (2017)
 - [ ] 08 — Log4Shell (2021)
