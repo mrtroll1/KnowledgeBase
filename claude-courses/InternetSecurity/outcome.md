@@ -24,8 +24,12 @@
 - **CSP and inline event handlers**: Didn't realize that CSP treats event handlers (`onerror`, `onclick`) as inline scripts — they're blocked by `script-src 'self'` just like `<script>` tags. Key insight: CSP sees *all* inline JS the same way.
 - **`href` XSS in React**: Missed that React doesn't sanitize URL schemes in `href` attributes — `javascript:alert('XSS')` renders as a clickable XSS link even though React auto-escapes text content.
 
+- **Password hashing evolution**: Understands the four-level progression (plaintext → simple hash → salted hash → slow hash) and why each level fails. Correctly explains why salts defeat rainbow tables but not brute force, and why bcrypt's slowness is the key property. Knows bcrypt, scrypt, and Argon2 as the correct choices; knows never to use MD5/SHA256 for passwords.
+- **Attacker economics for bcrypt**: Independently reasoned that bcrypt doesn't make cracking *impossible* — just expensive. Calculated realistic attack scenarios: spraying top-10 passwords across 1M users is feasible in days with multi-core machines. Understands that bcrypt buys time, not invincibility, and that weak passwords like `123456` are crackable regardless of hash function.
+- **Defense in depth for passwords**: Understands that bcrypt alone is insufficient — you need to reject known-weak passwords at registration (breach lists), add rate limiting for online attacks, and use MFA as a second factor. Correctly identified that offline cracking bypasses server-side rate limiting entirely.
+- **JWT as session optimization**: Understands that tokens exist to avoid re-authenticating on every request. Initially attributed this purely to bcrypt's cost, then refined understanding to include the broader architectural reasons (no DB round-trip, statelessness, horizontal scaling). Knows the pattern: authenticate once (pay bcrypt cost), then carry a signed token.
+
 ## Gaps — Not Yet Covered
-- Password hashing and storage
 - Memory safety bugs
 - Patch management and vulnerability lifecycle
 - Supply chain / dependency attacks
@@ -36,7 +40,7 @@
 - [x] 02 — The PHF CGI Attack (1996) — quiz passed
 - [x] 03 — SQL Injection (2000) — quiz passed, blind injection exercise completed
 - [x] 04 — The Samy Worm / XSS (2005) — quiz passed
-- [ ] 05 — The RockYou Breach (2009)
+- [x] 05 — The RockYou Breach (2009) — quiz skipped, concepts demonstrated in discussion
 - [ ] 06 — Heartbleed (2014)
 - [ ] 07 — Equifax & WannaCry (2017)
 - [ ] 08 — Log4Shell (2021)

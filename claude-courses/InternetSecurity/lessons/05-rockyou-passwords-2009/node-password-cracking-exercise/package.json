@@ -1,0 +1,15 @@
+{
+  "name": "password-cracking-exercise",
+  "version": "1.0.0",
+  "description": "SHA256+salt vs bcrypt: dictionary attack demo",
+  "main": "safe-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1"
+  }
+}
