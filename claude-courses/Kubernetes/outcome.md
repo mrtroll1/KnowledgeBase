@@ -50,11 +50,18 @@
 - **Kubelet role**: Correctly associates kubelet with pod communication, but doesn't yet see the full networking picture (Services, kube-proxy, DNS)
 - **StatefulSet storage details**: Understands volumeClaimTemplates conceptually but initially thought PVCs get deleted on scale-down
 
+## Refined After Lesson 7 Quiz
+- **Secrets as separation of concerns**: Strong understanding — articulated that Secrets "set the ground" for special treatment even though K8s doesn't secure them by default. Knows the hooks: RBAC separability, encryption-at-rest option, `600` file permissions
+- **Security spectrum**: Correctly ordered all four approaches (plaintext → Sealed Secrets → External Secrets Operator → Vault sidecar) and understands what each gives you
+- **Volume mount auto-update**: Solid — knows volume-mounted Secrets update via kubelet (~60s), env vars are frozen at pod start. Carried over from ConfigMap knowledge
+- **Runtime vs storage risks**: Tends to conflate them — when asked about env var exposure at runtime, jumped to "secrets in source code" (a storage problem) instead of the env-var-specific risks (child process inheritance, log leakage, visibility via `kubectl exec -- env`)
+- **EncryptionConfiguration**: Incorrectly believed K8s cannot encrypt Secrets at rest. In fact `EncryptionConfiguration` provides real AES encryption in etcd — it's just opt-in, not default. `kubectl get secret` still shows decoded values because the API server decrypts on read
+- **Hybrid env-var approach**: Didn't know the `command: ["sh", "-c", "export VAR=$(cat /file) && exec app"]` pattern for apps that can't be modified to read files
+
 ## Gaps — Not Yet Covered
 - **RBAC** — role-based access control
 - **Observability** — logging, monitoring, metrics
 - **Network Policies** — pod-to-pod traffic control
-- **ConfigMap/Secret management** — sealed secrets, external-secrets, reloading on change
 
 ## Lessons Completed
 - **Lesson 01 — Services & Networking**: Passed quiz (5/5 conceptually correct, minor nuances noted)
@@ -64,3 +71,4 @@
 - **Lesson 05 — Health Checks, Resources & Auto-Scaling**: Evolved lesson 4 chart with custom nginx configs (ConfigMap volumes), liveness/readiness/startup probes, resource limits (triggered real OOMKill), and HPA for api-gateway. Key debugging: discovered postgres needs startupProbe because liveness kills it during slow initialization. Quiz: 4.5/5 — minor gap on runtime OOMKill behavior (thought container fails to start vs being killed when it exceeds limit at runtime).
 - **Milestone Quiz 1 — Lessons 1–5 Review**: Scored 50/60 (83%). Strong across Services, HPA, Helm, QoS. Gaps identified in ConfigMap delivery mechanisms and L4/L7 recall under pressure — both addressed in review.
 - **Lesson 06 — Workload Types**: Scored 41.5/55 (75.5%). Strong on DaemonSet reasoning, workload selection, CronJob concurrency. Gaps in StatefulSet PVC retention behavior, init container lifecycle, and Job backoffLimit counting. Evolved Sparks chart: postgres → StatefulSet, added migration Job, node-logger DaemonSet, match-stats CronJob.
+- **Lesson 07 — Secrets Management**: Scored 6/8 (75%). Strong on why Secrets exist (separation of concerns), security spectrum ordering, volume vs env var update behavior. Gaps in distinguishing runtime delivery risks from storage risks, and didn't know K8s supports real encryption at rest via EncryptionConfiguration.
